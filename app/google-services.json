@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "111702793984",
+    "project_id": "weather-app-e05f1",
+    "storage_bucket": "weather-app-e05f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111702793984:android:19f4d751059af7a5c15de5",
+        "android_client_info": {
+          "package_name": "weather.app.live.update.forecast"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111702793984-gvg14r7cfuu9ktgf31bi5ba0k8p5tgdj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5MkM2C34yfjC0QLyJVgthR0DepDjxaqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111702793984-gvg14r7cfuu9ktgf31bi5ba0k8p5tgdj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item
+        android:id="@+id/nav_hourly_forecast_details"
+        android:icon="@drawable/ic_star"
+        android:title="Hourly Forecast Details" />
+    <item
+        android:id="@+id/nav_daily_forecast_details"
+        android:icon="@drawable/ic_star"
+        android:title="Daily Forecast Details" />
+    <item
+        android:id="@+id/nav_privacy_policy"
+        android:icon="@drawable/ic_star"
+        android:title="Privacy Policy" />
+
+</menu>

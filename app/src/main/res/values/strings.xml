@@ -1,0 +1,91 @@
+<resources>
+    <string name="app_name">Weather App</string>
+
+    <string name="location_settings">Location Setting</string>
+    <string name="location_settings_message">Please turn on location for better servicing. If you do not turn on location then you need to manually search for weather information in a particular location.</string>
+    <string name="location_settings_button">Ok</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="location_cancel_message">Location auto detection system disable due to turn off location. To get weather info please search manually, Thank you.</string>
+    <string name="weather_info_retrieve_filed">Sorry, Weather info retrieve failed. Please try again later.</string>
+    <string name="data_updated_successfully">Data updated successfully</string>
+    <string name="failed_for">Failed for:- </string>
+    <string name="temperature">Temperature</string>
+    <string name="feels_like">Feels Like</string>
+    <string name="description">Description</string>
+    <string name="city">City</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
+    <string name="hourly_forecast">Hourly Forecast</string>
+    <string name="daily_forecast">Daily Forecast</string>
+    <string name="details_with_arrow">Details &#8594;</string>
+    <string name="other_details">Others Details</string>
+    <string name="temp_details">Temperature Details</string>
+    <string name="feels_like_details">Feels Like Details</string>
+    <string name="sunrise_with_clone">Sunrise:- &#160;</string>
+    <string name="sunset_with_clone">Sunset:- &#160;</string>
+    <string name="temp_with_clone">Temperature:- &#160;</string>
+    <string name="feels_like_with_clone">Feels Like:- &#160;</string>
+    <string name="pressure_with_clone">Pressure:- &#160;</string>
+    <string name="humidity_with_clone">Humidity:- &#160;</string>
+    <string name="dew_point_with_clone">Dew Point:- &#160;</string>
+    <string name="uvi_index_with_clone">Uvi Index:- &#160;</string>
+    <string name="pop_with_clone">Possibility Of Precipitation:- &#160;</string>
+    <string name="cloud_with_clone">Cloud:- &#160;</string>
+    <string name="visibility_with_clone">Visibility:- &#160;</string>
+    <string name="wind_speed_with_clone">Wind Speed:- &#160;</string>
+    <string name="wind_deg_with_clone">Wind Degree:- &#160;</string>
+    <string name="wind_direction_with_clone">Wind Direction:- &#160;</string>
+    <string name="description_with_clone">Description:- &#160;</string>
+    <string name="max_temp_with_clone">Max Temp:- &#160;</string>
+    <string name="min_temp_with_clone">Min Temp:- &#160;</string>
+    <string name="morning_temp_with_clone">Morning Temp:- &#160;</string>
+    <string name="day_temp_with_clone">Day Temp:- &#160;</string>
+    <string name="eve_temp_with_clone">Eve Temp:- &#160;</string>
+    <string name="night_temp_with_clone">Night Temp:- &#160;</string>
+    <string name="mile">&#160; mile</string>
+    <string name="mile_per_hour">&#160; mile/hour</string>
+    <string name="pressure_unit">&#160; hPa</string>
+    <string name="percent_icon">&#160; %</string>
+    <string name="degree_celsius">&#160; \u2103</string>
+
+    <string name="current_temp">Current Temperature:- &#160;</string>
+    <string name="current_feels_like">Current Feels Like:- &#160;</string>
+    <string name="wind_details">Wind Details</string>
+    <string name="sun_details">Sun Details</string>
+    <string name="radar">Radar</string>
+    <string name="my_location">My Location</string>
+    <string name="search">Search</string>
+    <string name="search_city_name">City Name</string>
+    <string name="open_drawer">open drawer</string>
+    <string name="close_drawer">close drawer</string>
+
+    <string name="item_count_with_clone">Item Count:- &#160;</string>
+    <string name="app_feedback_title">Rate Our App</string>
+    <string name="app_feedback_message">We are working hard for better user experience. We\'d greatly appreciate if you can rate us. (best rating will help us for inspiring to improve)</string>
+    <string name="no_internet_message">No valid internet connection detected. Please check your internet connection to get current weather update.</string>
+    <string name="thank_you">Thank you</string>
+    <string name="found_new_update">Found New Version</string>
+    <string name="new_update_message">Your app is not updated, Please update to latest version.</string>
+    <string name="ok">Ok</string>
+    <string name="update_now">Update Now</string>
+    <string name="version_name">Version:- </string>
+
+    <string name="privacy_policy_link">https://urappbazar5630.blogspot.com/p/weather-app-privacy-policy.html</string>
+
+
+
+
+<!--    for test ads-->
+    <string name="admob_application_id">ca-app-pub-3940256099942544~3347511713</string>
+
+<!--    for real ads-->
+<!--    <string name="admob_application_id">ca-app-pub-9356290658226735~8121936281</string>-->
+
+
+
+
+
+
+
+
+</resources>
