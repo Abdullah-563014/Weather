@@ -16,10 +16,7 @@ import weather.app.live.update.forecast.R
 import weather.app.live.update.forecast.databinding.ActivitySplashBinding
 import weather.app.live.update.forecast.databinding.UnitSettingAlertDialogViewBinding
 import weather.app.live.update.forecast.ui.main.MainActivity
-import weather.app.live.update.forecast.utils.CommonMethod
-import weather.app.live.update.forecast.utils.Constants
-import weather.app.live.update.forecast.utils.Coroutines
-import weather.app.live.update.forecast.utils.SharedPreUtils
+import weather.app.live.update.forecast.utils.*
 import java.util.*
 
 class SplashActivity : AppCompatActivity() {
@@ -47,7 +44,7 @@ class SplashActivity : AppCompatActivity() {
         startCountDownTimer()
 
         if (savedInstanceState==null) {
-//            fetchAd()
+            fetchAd()
         }
 
 
@@ -99,12 +96,14 @@ class SplashActivity : AppCompatActivity() {
         }
         loadCallback = object :AppOpenAd.AppOpenAdLoadCallback() {
             override fun onAdLoaded(p0: AppOpenAd) {
+                myLogEvent(Constants.appOpenAdsLoadedBundleKey,"app open ads loaded successfully",Constants.appOpenAdsEventKey)
                 appOpenAd = p0
                 loadTime = (Date()).time
             }
 
             override fun onAdFailedToLoad(p0: LoadAdError) {
                 super.onAdFailedToLoad(p0)
+                myLogEvent(Constants.appOpenAdsFailedBundleKey,"app open ads loaded failed for:- ${p0.message}",Constants.appOpenAdsEventKey)
             }
         }
         val request: AdRequest =getAdRequest()
@@ -123,6 +122,7 @@ class SplashActivity : AppCompatActivity() {
         if (!isShowingAds && isAdAvailable()) {
             val fullScreenContentCallback: FullScreenContentCallback =object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
+                    myLogEvent(Constants.appOpenAdsShownBundleKey,"app open ads shown successfully",Constants.appOpenAdsEventKey)
                     appOpenAd = null
                     Coroutines.io {
                         SharedPreUtils.setLongToStorage(applicationContext,Constants.lastAppOpenAdsShownTimeKey,Date().time)

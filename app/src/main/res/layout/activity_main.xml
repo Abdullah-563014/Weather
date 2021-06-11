@@ -625,6 +625,48 @@
                 <!--        Current weather alert section ended here-->
 
                 <LinearLayout
+                    android:id="@+id/waqiSectionRootLayout"
+                    style="@style/section_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        style="@style/section_title_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            style="@style/section_title_tv"
+                            android:text="@string/waqi"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:padding="@dimen/_10sdp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/waqiIndexTextView"
+                            style="@style/normal_tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:id="@+id/waqiSourceNameTextView"
+                            style="@style/normal_tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:id="@+id/waqiMessageTextView"
+                            style="@style/normal_tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <!--        Waqi section ended here-->
+                <!--        Waqi weather alert section ended here-->
+                <!--        Waqi weather alert section ended here-->
+
+
+                <LinearLayout
                     style="@style/section_root"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_230sdp">

@@ -41,8 +41,11 @@ import com.google.android.gms.location.*
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.database.*
 import com.google.gson.Gson
+import com.google.gson.JsonElement
 import com.urapp.myappratinglibrary.AppRatingDialog
 import com.urapp.myappratinglibrary.listener.RatingDialogListener
+import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -193,13 +196,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 LocationManager.GPS_PROVIDER
             )) {
             if (boundStatus && serviceConnection!=null) {
-                unbindService(serviceConnection!!)
-                boundStatus = false
-                serviceConnection=null
-                checkLocationStatus()
-            } else {
-                initServiceConnection()
                 try {
+                    unbindService(serviceConnection!!)
+                    boundStatus = false
+                    serviceConnection=null
+                    checkLocationStatus()
+                } catch (e: Exception) {}
+            } else {
+                try {
+                    initServiceConnection()
                     Intent(this, MyLocationService::class.java).also { intent ->
                         bindService(intent, serviceConnection!!, Context.BIND_AUTO_CREATE)
                     }
@@ -231,6 +236,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val geocoder = Geocoder(this, Locale.getDefault())
             val addresses: List<Address> = geocoder.getFromLocation(lat, lan, 3)
             val city: String? = addresses[0].getAddressLine(0)
+            val countryName: String?=addresses[0].countryName
+            countryName?.let {
+                updateWaqiSection(it)
+            }
             city?.let {
                 cityName=it
                 binding.currentCityNameTextView.text=cityName
@@ -832,6 +841,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    private fun updateWaqiSection(countryName: String) {
+        val call: Call<JsonElement> =viewModel.getWaqiInfo(countryName,BuildConfig.WAQI_API_KEY)
+        call.enqueue(object : Callback<JsonElement> {
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                if (response.isSuccessful && response.code()==200) {
+                    val rootObject: JSONObject= JSONObject(response.body().toString())
+                    if (rootObject.getString("status").equals("ok",true)) {
+                        val dataObject: JSONObject=rootObject.getJSONObject("data")
+                        val waqi: Int=dataObject.getInt("aqi")
+                        val sourceArray: JSONArray=dataObject.getJSONArray("attributions")
+                        val sourceName: String=sourceArray.getJSONObject(0).getString("name")
+
+                        binding.waqiSectionRootLayout.visibility=View.VISIBLE
+                        binding.waqiIndexTextView.text="${resources.getString(R.string.waqi_with_clone)} $waqi"
+                        binding.waqiMessageTextView.text="${resources.getString(R.string.message_with_clone)} ${CommonMethod.getWaqiToMessage(this@MainActivity,waqi)}"
+                        binding.waqiSourceNameTextView.text="${resources.getString(R.string.source_with_clone)} $sourceName"
+                    } else {
+                        binding.waqiSectionRootLayout.visibility=View.GONE
+                    }
+                } else {
+                    binding.waqiSectionRootLayout.visibility=View.GONE
+                }
+            }
+
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                binding.waqiSectionRootLayout.visibility=View.GONE
+            }
+
+        })
+    }
+
     private fun updateCurrentWeatherRadarSection(model: CurrentAndForecastWeatherInfoModel) {
         binding.currentWeatherRadarMapWebView.settings.javaScriptEnabled=true
         binding.currentWeatherRadarMapWebView.setBackgroundColor(Color.TRANSPARENT)
@@ -1229,22 +1269,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNegativeButtonClicked() {
-//        myLogEvent(Constants.appRatingBundleKey,"user press on negative button",Constants.userAppRatingEventKey)
+        myLogEvent(Constants.appRatingNegativeBundleKey,"user press on negative button",Constants.userAppRatingEventKey)
         shortToast(resources.getString(R.string.thank_you))
         super.onBackPressed()
     }
 
     override fun onNeutralButtonClicked() {
-//        myLogEvent(Constants.appRatingBundleKey,"user press on neutral button",Constants.userAppRatingEventKey)
+        myLogEvent(Constants.appRatingNeutralBundleKey,"user press on neutral button",Constants.userAppRatingEventKey)
         shortToast(resources.getString(R.string.thank_you))
         super.onBackPressed()
     }
 
     override fun onPositiveButtonClicked(rate: Int) {
-//        myLogEvent(Constants.appRatingBundleKey,"user rate $rate star",Constants.userAppRatingEventKey)
         if (rate==5) {
+            myLogEvent(Constants.appRatingFiveStarBundleKey,"user rate $rate star",Constants.userAppRatingEventKey)
             CommonMethod.openAppLink(this)
         } else{
+            myLogEvent(Constants.appRatingLessThanFiveStarBundleKey,"user rate $rate star",Constants.userAppRatingEventKey)
             shortToast(resources.getString(R.string.thank_you))
             super.onBackPressed()
         }

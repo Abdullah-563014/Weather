@@ -35,9 +35,15 @@ object Constants {
 
 
 //     =============================== for analytics event ===============================
-     val appRatingUserPropertyKey: String="app_rating_user_property"
-     val appRatingBundleKey: String="app_rating"
      val userAppRatingEventKey: String="user_app_rating"
+     val appRatingNegativeBundleKey: String="rate_dialog_negative"
+     val appRatingFiveStarBundleKey: String="rate_dialog_five_star"
+     val appRatingLessThanFiveStarBundleKey: String="rate_dialog_less_than_five_star"
+     val appRatingNeutralBundleKey: String="rate_dialog_neutral"
+     val appOpenAdsEventKey: String="app_open_ads"
+     val appOpenAdsLoadedBundleKey: String="app_open_ads_loaded"
+     val appOpenAdsShownBundleKey: String="app_open_ads_shown"
+     val appOpenAdsFailedBundleKey: String="app_open_ads_failed"
 
 
 

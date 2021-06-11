@@ -114,6 +114,22 @@ object CommonMethod {
         return simpleDateFormat.format(millisecond * 1000)
     }
 
+    fun getWaqiToMessage(context: Context, value: Int): String {
+        if (value in 0..50) {
+            return "${context.resources.getString(R.string.waqi_first_message)}"
+        } else if (value in 51..100) {
+            return "${context.resources.getString(R.string.waqi_second_message)}"
+        } else if (value in 101..150) {
+            return "${context.resources.getString(R.string.waqi_third_message)}"
+        } else if (value in 151..200) {
+            return "${context.resources.getString(R.string.waqi_fourth_message)}"
+        } else if (value in 201..300) {
+            return "${context.resources.getString(R.string.waqi_fifth_message)}"
+        } else {
+            return "${context.resources.getString(R.string.waqi_sixth_message)}"
+        }
+    }
+
     fun windDegToDir(directionInDegrees: Double): String {
         var cardinalDirection: String? = null
         cardinalDirection = if (directionInDegrees in 348.75..360.0 ||

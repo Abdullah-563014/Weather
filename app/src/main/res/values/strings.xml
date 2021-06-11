@@ -100,6 +100,27 @@
     <string name="event_end_with_clone">End:-</string>
     <string name="sender_with_clone">Sender:-</string>
     <string name="rain_for_first_hour_with_clone">Rain for first hour:-</string>
+    <string name="waqi">World Air Quality Index</string>
+    <string name="waqi_with_clone">World Air Quality Index:-</string>
+    <string name="source_with_clone">Source Name:-</string>
+    <string name="waqi_first_message">
+        Air quality is considered satisfactory, and air pollution poses little or no risk
+    </string>
+    <string name="waqi_second_message">
+        Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution.
+    </string>
+    <string name="waqi_third_message">
+        Members of sensitive groups may experience health effects. The general public is not likely to be affected.
+    </string>
+    <string name="waqi_fourth_message">
+        Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects
+    </string>
+    <string name="waqi_fifth_message">
+        Health warnings of emergency conditions. The entire population is more likely to be affected.
+    </string>
+    <string name="waqi_sixth_message">
+        Health alert: everyone may experience more serious health effects
+    </string>
 
 
 
