@@ -9,6 +9,9 @@ class MainActivityViewModel : ViewModel() {
 
     fun getCitySuggestion(key: String, q: String) =MyApi.invoke(" ").getCitySuggestion(key,q)
 
+    fun getWaqiInfo(countryName: String, token: String) =MyApi.invoke(" "," "," ").getWaqiInfo(countryName,token)
+
+
 
 
 }

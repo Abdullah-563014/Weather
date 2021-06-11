@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:fillViewport="true">
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="@dimen/_10sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            style="@style/section_title_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:gravity="center"
+            android:text="@string/unit_setting" />
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/dateFormatIconImageView"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_date" />
+
+            <TextView
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13ssp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_toEndOf="@+id/dateFormatIconImageView"
+                android:text="@string/date_format" />
+
+            <weather.app.live.update.forecast.ui.custom.DropDownView
+                android:id="@+id/dateFormatDropDownView"
+                style="@style/UnitSettingDialogDropDownStyle"
+                android:textSize="@dimen/_7ssp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/date_month_year" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/timeFormatIconImageView"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_alarm" />
+
+            <TextView
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13ssp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_toEndOf="@+id/timeFormatIconImageView"
+                android:text="@string/time_format" />
+
+            <weather.app.live.update.forecast.ui.custom.DropDownView
+                android:id="@+id/timeFormatDropDownView"
+                style="@style/UnitSettingDialogDropDownStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/twelveHours" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/temperatureIconImageView"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_tempreature" />
+
+            <TextView
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13ssp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_toEndOf="@+id/temperatureIconImageView"
+                android:text="@string/temperature" />
+
+            <weather.app.live.update.forecast.ui.custom.DropDownView
+                android:id="@+id/temperatureDropDownView"
+                style="@style/UnitSettingDialogDropDownStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/c" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/precipitationIconImageView"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_precipitation" />
+
+            <TextView
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13ssp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_toEndOf="@+id/precipitationIconImageView"
+                android:text="@string/precipitation" />
+
+            <weather.app.live.update.forecast.ui.custom.DropDownView
+                android:id="@+id/precipitationDropDownView"
+                style="@style/UnitSettingDialogDropDownStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/mm" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/windSpeedIconImageView"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_direction" />
+
+            <TextView
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13ssp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_toEndOf="@+id/windSpeedIconImageView"
+                android:text="@string/wind_speed" />
+
+            <weather.app.live.update.forecast.ui.custom.DropDownView
+                android:id="@+id/windSpeedDropDownView"
+                style="@style/UnitSettingDialogDropDownStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/kilo_meter_per_hour" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/pressureIconImageView"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_pressure" />
+
+            <TextView
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13ssp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_toEndOf="@+id/pressureIconImageView"
+                android:text="@string/pressure" />
+
+            <weather.app.live.update.forecast.ui.custom.DropDownView
+                android:id="@+id/pressureDropDownView"
+                style="@style/UnitSettingDialogDropDownStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/pressure_unit" />
+        </RelativeLayout>
+        <Button
+            android:id="@+id/doneButton"
+            style="@style/MyButtonStyle"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:text="@string/done"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

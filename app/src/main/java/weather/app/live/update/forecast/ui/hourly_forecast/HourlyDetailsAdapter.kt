@@ -27,16 +27,16 @@ class HourlyDetailsAdapter(context: Context, list: List<Hourly>, timeZone: Strin
             Glide.with(context).asGif().load(CommonMethod.getTargetGifIcon(list[position].weather[0].icon)).into(holder.binding.conditionImageView)
         } catch (e: Exception) {}
         holder.binding.timeTextView.text="${CommonMethod.utcToOnlyDayName(list[position].dt,timeZone)}, ${CommonMethod.utcToTime(list[position].dt,timeZone)}"
-        holder.binding.tempTextView.text="${context.resources.getString(R.string.temp_with_clone)}${list[position].temp.roundToInt()}${context.resources.getString(R.string.degree_celsius)}"
-        holder.binding.feelsLikeTextView.text="${context.resources.getString(R.string.feels_like_with_clone)}${list[position].feels_like.roundToInt()}${context.resources.getString(R.string.degree_celsius)}"
-        holder.binding.pressureTextView.text="${context.resources.getString(R.string.pressure_with_clone)}${list[position].pressure}${context.resources.getString(R.string.pressure_unit)}"
+        holder.binding.tempTextView.text="${context.resources.getString(R.string.temp_with_clone)}${CommonMethod.getTempValue(list[position].temp)}"
+        holder.binding.feelsLikeTextView.text="${context.resources.getString(R.string.feels_like_with_clone)}${CommonMethod.getTempValue(list[position].feels_like)}"
+        holder.binding.pressureTextView.text="${context.resources.getString(R.string.pressure_with_clone)}${CommonMethod.getPressureValue(list[position].pressure)}"
         holder.binding.humidityTextView.text="${context.resources.getString(R.string.humidity_with_clone)}${list[position].humidity}${context.resources.getString(R.string.percent_icon)}"
-        holder.binding.dewPointTextView.text="${context.resources.getString(R.string.dew_point_with_clone)}${list[position].dew_point.roundToInt()}${context.resources.getString(R.string.degree_celsius)}"
+        holder.binding.dewPointTextView.text="${context.resources.getString(R.string.dew_point_with_clone)}${CommonMethod.getTempValue(list[position].dew_point)}"
         holder.binding.uviTextView.text="${context.resources.getString(R.string.uvi_index_with_clone)}${list[position].uvi.roundToInt()}"
-        holder.binding.popTextView.text="${context.resources.getString(R.string.pop_with_clone)}${list[position].pop}${context.resources.getString(R.string.percent_icon)}"
+        holder.binding.popTextView.text="${context.resources.getString(R.string.pop_with_clone)}${(list[position].pop*100).roundToInt()}${context.resources.getString(R.string.percent_icon)}"
         holder.binding.cloudTextView.text="${context.resources.getString(R.string.cloud_with_clone)}${list[position].clouds}"
-        holder.binding.visibilityTextView.text="${context.resources.getString(R.string.visibility_with_clone)}${CommonMethod.convertMeterToMile(list[position].visibility).roundToInt()}${context.resources.getString(R.string.mile)}"
-        holder.binding.windSpeedTextView.text="${context.resources.getString(R.string.wind_speed_with_clone)}${CommonMethod.convertMpsToMph(list[position].wind_speed).roundToInt()}${context.resources.getString(R.string.mile_per_hour)}"
+        holder.binding.visibilityTextView.text="${context.resources.getString(R.string.visibility_with_clone)}${CommonMethod.getDistanceValue(list[position].visibility)}"
+        holder.binding.windSpeedTextView.text="${context.resources.getString(R.string.wind_speed_with_clone)}${CommonMethod.getSpeedValue(list[position].wind_speed)}"
         holder.binding.windDirectionTextView.text="${context.resources.getString(R.string.wind_direction_with_clone)}${CommonMethod.windDegToDir(list[position].wind_deg)}"
         holder.binding.descriptionTextView.text="${context.resources.getString(R.string.description_with_clone)}${list[position].weather[0].description}"
     }

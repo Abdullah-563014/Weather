@@ -14,7 +14,8 @@ import com.google.firebase.ktx.Firebase
 class MyApplication: Application() {
 
 
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    lateinit var firebaseAnalytics: FirebaseAnalytics
+
 
     override fun onCreate() {
         super.onCreate()
@@ -23,6 +24,8 @@ class MyApplication: Application() {
         FirebaseApp.initializeApp(this)
         firebaseAnalytics = Firebase.analytics
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+
+        
 
 
         MobileAds.initialize(this) {

@@ -65,8 +65,8 @@ class MyLocationService : Service() {
     @SuppressLint("MissingPermission")
     fun startLocationUpdate() {
         val mLocationRequest = LocationRequest.create()
-        mLocationRequest.interval = 60000
-        mLocationRequest.fastestInterval = 2000
+        mLocationRequest.interval = 1800000
+        mLocationRequest.fastestInterval = 3000
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         mLocationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {

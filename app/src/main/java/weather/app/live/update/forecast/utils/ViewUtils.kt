@@ -4,10 +4,12 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import weather.app.live.update.forecast.ui.MyApplication
 
 
 fun Context.shortToast(message: String) {
@@ -32,6 +34,12 @@ fun Context.haveInternet(): Boolean {
     } else {
         (connectivityManager.activeNetworkInfo != null && connectivityManager.activeNetworkInfo!!.isAvailable && connectivityManager.activeNetworkInfo!!.isConnected)
     }
+}
+
+fun Context.myLogEvent(bundleKey: String, bundleValue: String, eventKey: String) {
+    val bundle: Bundle = Bundle()
+    bundle.putString(bundleKey,bundleValue)
+    (applicationContext as MyApplication).firebaseAnalytics.logEvent(eventKey,bundle)
 }
 
 

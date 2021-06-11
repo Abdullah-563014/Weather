@@ -4,41 +4,88 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import weather.app.live.update.forecast.R
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 object CommonMethod {
 
-    fun convertKelvinToCelsius(kelvin: Double): Double{
-        return kelvin-273.15
+
+    fun getTempValue(originalValue: Double): String {
+        if (Constants.temperatureUnit.equals("F",true)) {
+            return "${((originalValue*1.8)+32).roundToInt()} \u2109"
+        } else if (Constants.temperatureUnit.equals("K",true)) {
+            return "${(originalValue+273.15).roundToInt()} \u212A"
+        } else {
+            return "${originalValue.roundToInt()} \u2103"
+        }
     }
 
-    // (meter/sec) to (mile/hour)
-    fun convertMpsToMph(mps: Double): Double{
-        return mps*2.237
+    fun getPressureValue(originalValue: Int): String {
+        if (Constants.pressureUnit.equals("mmHg",true)) {
+            return "${(originalValue*0.75).roundToInt()} mmHg"
+        } else if (Constants.pressureUnit.equals("atm",true)) {
+            return "${(originalValue*0.0009869232667160128).roundToInt()} atm"
+        } else if (Constants.pressureUnit.equals("mbar",true)) {
+            return "$originalValue mbar"
+        } else {
+            return "$originalValue hPa"
+        }
     }
 
-    // (meter) to (mile)
-    fun convertMeterToMile(meter: Double): Double{
-        return meter/1609
+    fun getSpeedValue(originalValue: Double): String {
+        if (Constants.windSpeedUnit.equals("km/h",true)) {
+            return "${(originalValue*3.6).roundToInt()} km/h"
+        } else if (Constants.windSpeedUnit.equals("mi/h",true)) {
+            return "${(originalValue*2.23694).roundToInt()} mi/h"
+        } else {
+            return "$originalValue m/s"
+        }
+    }
+
+    fun getDistanceValue(originalValue: Double): String {
+        if (Constants.windSpeedUnit.equals("km/h",true)) {
+            return "${String.format("%.2f",(originalValue/1000)).toDouble()} kilo meter"
+        } else if (Constants.windSpeedUnit.equals("mi/h",true)) {
+            return "${String.format("%.2f",(originalValue/1609)).toDouble()} mile"
+        } else {
+            return "${String.format("%.2f",originalValue).toDouble()} meter"
+        }
+    }
+
+    fun getPrecipitationValue(originalValue: Double): String {
+        if (Constants.precipitationUnit.equals("in",true)) {
+            return "${String.format("%.2f",(originalValue/25.4)).toDouble()} in"
+        } else {
+            return "${String.format("%.2f",originalValue).toDouble()} mm"
+        }
     }
 
     fun utcToDate(millisecond: Long, timeZone: String) : String{
-        val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
+        val simpleDateFormat: SimpleDateFormat = SimpleDateFormat(Constants.dateFormatUnit, Locale.ENGLISH)
         simpleDateFormat.timeZone = TimeZone.getTimeZone(timeZone)
         return simpleDateFormat.format(millisecond * 1000)
     }
 
     fun utcToTime(millisecond: Long, timeZone: String) : String{
-        val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
+        var simpleDateFormat: SimpleDateFormat
+        if (Constants.timeFormatUnit.equals("12 Hour",true)) {
+            simpleDateFormat = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
+        } else {
+            simpleDateFormat = SimpleDateFormat("HH:mm", Locale.ENGLISH)
+        }
         simpleDateFormat.timeZone = TimeZone.getTimeZone(timeZone)
         return simpleDateFormat.format(millisecond * 1000)
     }
 
-    fun utcToOnlyHour(millisecond: Long, timeZone: String): String{
-        val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("hh a", Locale.ENGLISH)
+    fun utcToHour(millisecond: Long, timeZone: String): String{
+        var simpleDateFormat: SimpleDateFormat
+        if (Constants.timeFormatUnit.equals("12 Hour",true)) {
+            simpleDateFormat = SimpleDateFormat("hh a", Locale.ENGLISH)
+        } else {
+            simpleDateFormat = SimpleDateFormat("HH:mm", Locale.ENGLISH)
+        }
         simpleDateFormat.timeZone = TimeZone.getTimeZone(timeZone)
         return simpleDateFormat.format(millisecond * 1000)
     }
@@ -146,9 +193,11 @@ object CommonMethod {
     fun openAppLink(context: Context) {
         val appPackageName: String=context.applicationContext.packageName
         try {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+            val appIntent: Intent= Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id=$appPackageName"))
+            appIntent.setPackage("com.android.vending")
+            context.startActivity(appIntent)
         } catch (e: ActivityNotFoundException) {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+            context.startActivity(Intent.createChooser(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")),context.resources.getString(R.string.choose_one)))
         }
     }
 
@@ -157,6 +206,8 @@ object CommonMethod {
         val numMilliSecondsForMinutes: Long = (60000*Constants.adsIntervalInMinute).toLong()
         return dateDifference > numMilliSecondsForMinutes
     }
+
+
 
 
 

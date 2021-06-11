@@ -1,189 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@drawable/rounded_light_white_bg"
-    android:padding="@dimen/_10sdp"
-    android:layout_margin="@dimen/_5sdp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_5sdp"
+    android:background="@drawable/rounded_light_white_bg"
+    android:orientation="vertical"
+    android:padding="@dimen/_10sdp">
+
     <LinearLayout
-        android:background="@drawable/rounded_light_white_bg"
-        android:orientation="horizontal"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp">
+        android:layout_height="@dimen/_43sdp"
+        android:background="@drawable/rounded_light_white_bg"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/conditionImageView"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_40sdp"/>
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_38sdp" />
+
         <TextView
             android:id="@+id/timeTextView"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="@dimen/_12ssp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12ssp"
+            android:textStyle="bold" />
     </LinearLayout>
+
     <LinearLayout
-        android:orientation="horizontal"
-        android:weightSum="2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:weightSum="2">
+
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/dailyDetailsTimeTextView"
-                style="@style/normal_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/dailyDetailsSunriseTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsSunsetTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsPressureTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsHumidityTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsDewPointTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsUviTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsCloudTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
+
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dailyDetailsRainTextView"
+                style="@style/normal_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsWindSpeedTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsWindDirectionTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsPopTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsDescriptionTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_7sdp"
         android:orientation="horizontal"
-        android:weightSum="2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:weightSum="2">
+
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
             <TextView
                 style="@style/section_title_tv"
-                android:gravity="center"
-                android:textStyle="normal"
-                android:text="@string/temperature"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/temperature"
+                android:textStyle="normal" />
+
             <TextView
                 android:id="@+id/dailyDetailsMorningTempTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsDayTempTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsEveTempTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsNightTempTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsMaxTempTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsMinTempTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
+
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
             <TextView
                 style="@style/section_title_tv"
-                android:gravity="center"
-                android:textStyle="normal"
-                android:text="@string/feels_like"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/feels_like"
+                android:textStyle="normal" />
+
             <TextView
                 android:id="@+id/dailyDetailsMorningFeelsLikeTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsDayFeelsLikeTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsEveFeelsLikeTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/dailyDetailsNightFeelsLikeTextView"
                 style="@style/normal_tv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -16,6 +16,7 @@ import android.os.IBinder
 import android.provider.BaseColumns
 import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val columnCityName: String="city_name"
     private val columnCountryName: String="country_name"
     private val columnLatAndLon: String="lat_and_lon"
+    private var unitSettingAlertDialog: AlertDialog?=null
 
 
 
@@ -129,14 +131,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         if (savedInstanceState==null) {
-            appFeedbackDialog().monitor()
-            appFeedbackDialog().showRateDialogIfMeetsConditions()
             initServiceConnection()
             loadAppSettingFromDatabase()
-            loadSettingFromStorage()
         }
 
         loadHints()
+
+
+
 
 
 
@@ -308,7 +310,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 t: Throwable
             ) {
                 shortToast(resources.getString(R.string.failed_for) + t.message)
-                binding.spinKitId.visibility = View.VISIBLE
+                binding.spinKitId.visibility = View.GONE
             }
 
         })
@@ -374,43 +376,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateUi(currentAndForecastWeatherInfoModel: CurrentAndForecastWeatherInfoModel) {
-        binding.currentTemperatureTextView.text=currentAndForecastWeatherInfoModel.current.temp.roundToInt().toString()+" \u2103"
-        binding.currentWindSpeedTextView.text="wind speed:- "+String.format(
-            "%.2f", CommonMethod.convertMpsToMph(
-                currentAndForecastWeatherInfoModel.current.wind_speed
-            )
-        )+" mile/hour"
+        binding.currentTemperatureTextView.text=CommonMethod.getTempValue(currentAndForecastWeatherInfoModel.current.temp)
+        binding.currentWindSpeedTextView.text="${resources.getString(R.string.wind_speed_with_clone)} ${CommonMethod.getSpeedValue(currentAndForecastWeatherInfoModel.current.wind_speed)}"
         binding.currentDescriptionTextView.text=currentAndForecastWeatherInfoModel.current.weather[0].description
         binding.currentCityNameTextView.text=cityName
 
-        binding.currentMaxAndMinTempTextView.text=currentAndForecastWeatherInfoModel.daily[0].temp.max.roundToInt().toString()+"\u00B0 /"+ currentAndForecastWeatherInfoModel.daily[0].temp.min.roundToInt().toString()+"\u00B0"
+        binding.currentMaxAndMinTempTextView.text="${CommonMethod.getTempValue(currentAndForecastWeatherInfoModel.daily[0].temp.max)} /${CommonMethod.getTempValue(currentAndForecastWeatherInfoModel.daily[0].temp.min)}"
         try {
-            Glide.with(this).asGif().load(
-                CommonMethod.getTargetGifIcon(
-                    currentAndForecastWeatherInfoModel.current.weather[0].icon
-                )
-            ).into(binding.currentWeatherConditionImageView)
+            Glide.with(this).asGif().load(CommonMethod.getTargetGifIcon(currentAndForecastWeatherInfoModel.current.weather[0].icon)).into(binding.currentWeatherConditionImageView)
         } catch (e: Exception) {}
-        binding.currentSunriseTimeTextView.text=resources.getString(R.string.sunrise)+":- "+CommonMethod.utcToTime(
-            currentAndForecastWeatherInfoModel.current.sunrise,
-            currentAndForecastWeatherInfoModel.timezone
-        )
-        binding.currentSunsetTimeTextView.text=resources.getString(R.string.sunset)+":- "+CommonMethod.utcToTime(
-            currentAndForecastWeatherInfoModel.current.sunset,
-            currentAndForecastWeatherInfoModel.timezone
-        )
-        binding.currentDateTimeTextView.text=CommonMethod.utcToDate(
-            currentAndForecastWeatherInfoModel.current.dt,
-            currentAndForecastWeatherInfoModel.timezone
-        )
+        binding.currentSunriseTimeTextView.text="${resources.getString(R.string.sunrise_with_clone)}${CommonMethod.utcToTime(currentAndForecastWeatherInfoModel.current.sunrise, currentAndForecastWeatherInfoModel.timezone)}"
+        binding.currentSunsetTimeTextView.text="${resources.getString(R.string.sunset_with_clone)}${CommonMethod.utcToTime(currentAndForecastWeatherInfoModel.current.sunset,currentAndForecastWeatherInfoModel.timezone)}"
+        binding.currentDateTimeTextView.text=CommonMethod.utcToDate(currentAndForecastWeatherInfoModel.current.dt, currentAndForecastWeatherInfoModel.timezone)
 
         updateHourlyForecastSection(currentAndForecastWeatherInfoModel)
         updateDailyForecastSection(currentAndForecastWeatherInfoModel)
         updateCurrentWindSection(currentAndForecastWeatherInfoModel)
-        updateCurrentSunsection(currentAndForecastWeatherInfoModel)
+        updateCurrentSunSection(currentAndForecastWeatherInfoModel)
         updateCurrentWeatherTempDetailsSection(currentAndForecastWeatherInfoModel)
         updateCurrentWeatherFeelsLikeTempDetailsSection(currentAndForecastWeatherInfoModel)
         updateCurrentWeatherOthersDetailsSection(currentAndForecastWeatherInfoModel)
+        updateCurrentWeatherAlertSection(currentAndForecastWeatherInfoModel)
         updateCurrentWeatherRadarSection(currentAndForecastWeatherInfoModel)
 
 
@@ -451,31 +437,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         sectionHourlyForecastConditionNameTextViewBinding.forecastConditionNameSixTextView.text=currentAndForecast.hourly[5].weather[0].main
         sectionHourlyForecastConditionNameTextViewBinding.forecastConditionNameSevenTextView.text=currentAndForecast.hourly[6].weather[0].main
 
-        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeOneTextView.text=CommonMethod.utcToOnlyHour(
+        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeOneTextView.text=CommonMethod.utcToHour(
             currentAndForecast.hourly[0].dt,
             currentAndForecast.timezone
         )
-        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeTwoTextView.text=CommonMethod.utcToOnlyHour(
+        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeTwoTextView.text=CommonMethod.utcToHour(
             currentAndForecast.hourly[1].dt,
             currentAndForecast.timezone
         )
-        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeThreeTextView.text=CommonMethod.utcToOnlyHour(
+        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeThreeTextView.text=CommonMethod.utcToHour(
             currentAndForecast.hourly[2].dt,
             currentAndForecast.timezone
         )
-        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeFourTextView.text=CommonMethod.utcToOnlyHour(
+        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeFourTextView.text=CommonMethod.utcToHour(
             currentAndForecast.hourly[3].dt,
             currentAndForecast.timezone
         )
-        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeFiveTextView.text=CommonMethod.utcToOnlyHour(
+        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeFiveTextView.text=CommonMethod.utcToHour(
             currentAndForecast.hourly[4].dt,
             currentAndForecast.timezone
         )
-        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeSixTextView.text=CommonMethod.utcToOnlyHour(
+        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeSixTextView.text=CommonMethod.utcToHour(
             currentAndForecast.hourly[5].dt,
             currentAndForecast.timezone
         )
-        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeSevenTextView.text=CommonMethod.utcToOnlyHour(
+        sectionHourlyForecastConditionTimeTextViewBinding.forecastConditionTimeSevenTextView.text=CommonMethod.utcToHour(
             currentAndForecast.hourly[6].dt,
             currentAndForecast.timezone
         )
@@ -762,19 +748,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateCurrentWindSection(model: CurrentAndForecastWeatherInfoModel) {
-        binding.currentWeatherDetailsWindSpeedTextView.text=resources.getString(R.string.wind_speed_with_clone)+CommonMethod.convertMpsToMph(
-            model.current.wind_speed
-        ).roundToInt().toString()+resources.getString(R.string.mile_per_hour)
-        binding.currentWeatherDetailsWindDegTextView.text=resources.getString(R.string.wind_deg_with_clone)+model.current.wind_deg.roundToInt().toString()
-        binding.currentWeatherDetailsWindDirectionTextView.text=resources.getString(R.string.wind_direction_with_clone)+CommonMethod.windDegToDir(
-            model.current.wind_deg
-        )
+        binding.currentWeatherDetailsWindSpeedTextView.text="${resources.getString(R.string.wind_speed_with_clone)}${CommonMethod.getSpeedValue(model.current.wind_speed)}"
+        binding.currentWeatherDetailsWindDegTextView.text="${resources.getString(R.string.wind_deg_with_clone)} ${model.current.wind_deg.roundToInt()}${resources.getString(R.string.degree_symbol)}"
+        binding.currentWeatherDetailsWindDirectionTextView.text="${resources.getString(R.string.wind_direction_with_clone)}${CommonMethod.windDegToDir(model.current.wind_deg)}"
         try {
             Glide.with(this).asGif().load(R.drawable.wind_rotate_wheel).into(binding.windRotatingImageView)
         } catch (e: Exception) {}
     }
 
-    private fun updateCurrentSunsection(model: CurrentAndForecastWeatherInfoModel) {
+    private fun updateCurrentSunSection(model: CurrentAndForecastWeatherInfoModel) {
         binding.currentWeatherSunriseSunsetView.sunriseTime=Time(
             CommonMethod.utcToOnlyHourAs24Format(
                 model.current.sunrise,
@@ -791,72 +773,63 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateCurrentWeatherTempDetailsSection(model: CurrentAndForecastWeatherInfoModel) {
-        binding.currentWeatherDetailsTempTextView.text=resources.getString(R.string.current_temp)+model.current.temp.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
-        binding.currentWeatherDetailsMaxTempTextView.text=resources.getString(R.string.max_temp_with_clone)+model.daily[0].temp.max.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
-        binding.currentWeatherDetailsMinTempTextView.text=resources.getString(R.string.min_temp_with_clone)+model.daily[0].temp.min.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
-        binding.currentWeatherDetailsMorningTempTextView.text=resources.getString(R.string.morning_temp_with_clone)+model.daily[0].temp.morn.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
-        binding.currentWeatherDetailsDayTempTextView.text=resources.getString(R.string.day_temp_with_clone)+model.daily[0].temp.day.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
-        binding.currentWeatherDetailsEveTempTextView.text=resources.getString(R.string.eve_temp_with_clone)+model.daily[0].temp.eve.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
-        binding.currentWeatherDetailsNightTempTextView.text=resources.getString(R.string.night_temp_with_clone)+model.daily[0].temp.night.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
+        binding.currentWeatherDetailsTempTextView.text="${resources.getString(R.string.current_temp)}${CommonMethod.getTempValue(model.current.temp)}"
+        binding.currentWeatherDetailsMaxTempTextView.text="${resources.getString(R.string.max_temp_with_clone)}${CommonMethod.getTempValue(model.daily[0].temp.max)}"
+        binding.currentWeatherDetailsMinTempTextView.text="${resources.getString(R.string.min_temp_with_clone)}${CommonMethod.getTempValue(model.daily[0].temp.min)}"
+        binding.currentWeatherDetailsMorningTempTextView.text="${resources.getString(R.string.morning_temp_with_clone)}${CommonMethod.getTempValue(model.daily[0].temp.morn)}"
+        binding.currentWeatherDetailsDayTempTextView.text="${resources.getString(R.string.day_temp_with_clone)}${CommonMethod.getTempValue(model.daily[0].temp.day)}"
+        binding.currentWeatherDetailsEveTempTextView.text="${resources.getString(R.string.eve_temp_with_clone)}${CommonMethod.getTempValue(model.daily[0].temp.eve)}"
+        binding.currentWeatherDetailsNightTempTextView.text="${resources.getString(R.string.night_temp_with_clone)}${CommonMethod.getTempValue(model.daily[0].temp.night)}"
     }
 
     private fun updateCurrentWeatherFeelsLikeTempDetailsSection(model: CurrentAndForecastWeatherInfoModel) {
-        binding.currentWeatherDetailsFeelsLikeTextView.text=resources.getString(R.string.current_feels_like)+model.current.feels_like.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
-        binding.currentWeatherDetailsMorningFeelsLikeTempTextView.text=resources.getString(R.string.morning_temp_with_clone)+model.daily[0].feels_like.morn.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
-        binding.currentWeatherDetailsDayFeelsLikeTempTextView.text=resources.getString(R.string.day_temp_with_clone)+model.daily[0].feels_like.day.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
-        binding.currentWeatherDetailsEveFeelsLikeTempTextView.text=resources.getString(R.string.eve_temp_with_clone)+model.daily[0].feels_like.eve.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
-        binding.currentWeatherDetailsNightFeelsLikeTempTextView.text=resources.getString(R.string.night_temp_with_clone)+model.daily[0].feels_like.night.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
+        binding.currentWeatherDetailsFeelsLikeTextView.text="${resources.getString(R.string.current_feels_like)}${CommonMethod.getTempValue(model.current.feels_like)}"
+        binding.currentWeatherDetailsMorningFeelsLikeTempTextView.text="${resources.getString(R.string.morning_temp_with_clone)}${CommonMethod.getTempValue(model.daily[0].feels_like.morn)}"
+        binding.currentWeatherDetailsDayFeelsLikeTempTextView.text="${resources.getString(R.string.day_temp_with_clone)}${CommonMethod.getTempValue(model.daily[0].feels_like.day)}"
+        binding.currentWeatherDetailsEveFeelsLikeTempTextView.text="${resources.getString(R.string.eve_temp_with_clone)}${CommonMethod.getTempValue(model.daily[0].feels_like.eve)}"
+        binding.currentWeatherDetailsNightFeelsLikeTempTextView.text="${resources.getString(R.string.night_temp_with_clone)}${CommonMethod.getTempValue(model.daily[0].feels_like.night)}"
     }
 
     private fun updateCurrentWeatherOthersDetailsSection(model: CurrentAndForecastWeatherInfoModel) {
-        binding.currentWeatherDetailsSunriseTextView.text=resources.getString(R.string.sunrise_with_clone)+CommonMethod.utcToTime(
+        binding.currentWeatherDetailsSunriseTextView.text="${resources.getString(R.string.sunrise_with_clone)}${CommonMethod.utcToTime(
             model.current.sunrise,
             model.timezone
-        )
-        binding.currentWeatherDetailsSunsetTextView.text=resources.getString(R.string.sunset_with_clone)+CommonMethod.utcToTime(
+        )}"
+        binding.currentWeatherDetailsSunsetTextView.text="${resources.getString(R.string.sunset_with_clone)}${CommonMethod.utcToTime(
             model.current.sunset,
             model.timezone
-        )
-        binding.currentWeatherDetailsPressureTextView.text=resources.getString(R.string.pressure_with_clone)+model.current.pressure.toString()+resources.getString(
-            R.string.pressure_unit
-        )
-        binding.currentWeatherDetailsHumidityTextView.text=resources.getString(R.string.humidity_with_clone)+model.current.humidity.toString()+resources.getString(
+        )}"
+        binding.currentWeatherDetailsPressureTextView.text="${resources.getString(R.string.pressure_with_clone)}${CommonMethod.getPressureValue(model.current.pressure)}"
+        binding.currentWeatherDetailsHumidityTextView.text="${resources.getString(R.string.humidity_with_clone)}${model.current.humidity}${resources.getString(
             R.string.percent_icon
-        )
-        binding.currentWeatherDetailsDewPointTextView.text=resources.getString(R.string.dew_point_with_clone)+model.current.dew_point.roundToInt().toString()+resources.getString(
-            R.string.degree_celsius
-        )
-        binding.currentWeatherDetailsUviTextView.text=resources.getString(R.string.uvi_index_with_clone)+model.current.uvi.roundToInt().toString()
-        binding.currentWeatherDetailsCloudTextView.text=resources.getString(R.string.cloud_with_clone)+model.current.clouds.toString()
-        binding.currentWeatherDetailsVisibilityTextView.text=resources.getString(R.string.visibility_with_clone)+CommonMethod.convertMeterToMile(
+        )}"
+        binding.currentWeatherDetailsDewPointTextView.text="${resources.getString(R.string.dew_point_with_clone)}${CommonMethod.getTempValue(model.current.dew_point)}"
+        binding.currentWeatherDetailsUviTextView.text="${resources.getString(R.string.uvi_index_with_clone)}${model.current.uvi}"
+        binding.currentWeatherDetailsCloudTextView.text="${resources.getString(R.string.cloud_with_clone)}${model.current.clouds}"
+        if (model.current.rain!=null && !model.current.rain.firstHour.isNaN()) {
+            binding.currentWeatherDetailsRainTextView.visibility=View.VISIBLE
+            binding.currentWeatherDetailsRainTextView.text="${resources.getString(R.string.rain_for_first_hour_with_clone)} ${CommonMethod.getPrecipitationValue(model.current.rain.firstHour)}"
+        } else {
+            binding.currentWeatherDetailsRainTextView.visibility=View.GONE
+        }
+        binding.currentWeatherDetailsVisibilityTextView.text="${resources.getString(R.string.visibility_with_clone)}${CommonMethod.getDistanceValue(
             model.current.visibility
-        ).roundToInt().toString()+resources.getString(R.string.mile)
-        binding.currentWeatherDetailsDescriptionTextView.text=resources.getString(R.string.description_with_clone)+model.current.weather[0].description
+        )}"
+        binding.currentWeatherDetailsDescriptionTextView.text="${resources.getString(R.string.description_with_clone)}${model.current.weather[0].description}"
 
+    }
+
+    private fun updateCurrentWeatherAlertSection(model: CurrentAndForecastWeatherInfoModel) {
+        if (!model.alerts.isNullOrEmpty() && !model.alerts[0].description.isNullOrEmpty()) {
+            binding.weatherAlertSectionRootLayout.visibility=View.VISIBLE
+            binding.currentWeatherAlertMessageTextView.text="${resources.getString(R.string.message_with_clone)} ${model.alerts[0].description}"
+            binding.currentWeatherAlertEventTextView.text="${resources.getString(R.string.event_with_clone)} ${model.alerts[0].event}"
+            binding.currentWeatherAlertStartTextView.text="${resources.getString(R.string.event_start_with_clone)} ${CommonMethod.utcToDate(model.alerts[0].start,model.timezone)}"
+            binding.currentWeatherAlertEndTextView.text="${resources.getString(R.string.event_end_with_clone)} ${CommonMethod.utcToDate(model.alerts[0].end,model.timezone)}"
+            binding.currentWeatherAlertSenderNameTextView.text="${resources.getString(R.string.sender_with_clone)} ${model.alerts[0].sender_name}"
+        } else {
+            binding.weatherAlertSectionRootLayout.visibility=View.GONE
+        }
     }
 
     private fun updateCurrentWeatherRadarSection(model: CurrentAndForecastWeatherInfoModel) {
@@ -944,9 +917,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun appFeedbackDialog(): AppRatingDialog {
         return AppRatingDialog.Builder()
                 .setCancelable(false)
-                .setPositiveButtonText("Submit")
-                .setNegativeButtonText("Never")
-                .setNeutralButtonText("Later")
+                .setPositiveButtonText(resources.getString(R.string.submit))
+                .setNegativeButtonText(resources.getString(R.string.never))
+                .setNeutralButtonText(resources.getString(R.string.later))
                 .setTitle(resources.getString(R.string.app_feedback_title))
                 .setDescription(resources.getString(R.string.app_feedback_message))
                 .setStarColor(R.color.lightSeaGreen)
@@ -955,21 +928,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .setDialogBackgroundColor(R.color.lightRed)
                 .setAfterInstallDay(1)
                 .setDefaultRating(3)
-                .setNumberOfLaunches(3)
-                .setRemindIntervalDay(1)
+                .setNumberOfLaunches(1)
+                .setRemindIntervalDay(3)
                 .setCanceledOnTouchOutside(false)
                 .create(this)
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
         if (requestCode == Constants.MY_PERMISSIONS_ACCESS_FINE_LOCATION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 checkLocationStatus()
             } else{
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults)
                 shortToast(resources.getString(R.string.location_cancel_message))
             }
         }
@@ -1017,8 +987,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         SharedPreUtils.setBooleanToStorage(applicationContext,Constants.adsFlagKey,appSettings.adsFlag.toBoolean())
                         SharedPreUtils.setIntToStorage(applicationContext,Constants.adsIntervalInMinuteKey,appSettings.adsIntervalInMinute.toInt())
                         SharedPreUtils.setStringToStorage(applicationContext,Constants.appOpenAdsCodeKey,appSettings.appOpenAdsCode)
-
-                        loadSettingFromStorage()
                     }
                 }
             }
@@ -1028,20 +996,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
         })
-    }
-
-    private fun loadSettingFromStorage() {
-        Coroutines.io {
-            Constants.appVersionName=SharedPreUtils.getStringFromStorage(applicationContext,Constants.versionNameKey,Constants.appVersionName)!!
-            Constants.appVersionMessage=SharedPreUtils.getStringFromStorage(applicationContext,Constants.versionMessageKey,Constants.appVersionMessage)!!
-            Constants.weatherApi=SharedPreUtils.getStringFromStorage(applicationContext,Constants.weatherApiKey,Constants.weatherApi)!!
-            Constants.adsFlag=SharedPreUtils.getBooleanFromStorage(applicationContext,Constants.adsFlagKey,Constants.adsFlag)
-            Constants.adsIntervalInMinute=SharedPreUtils.getIntFromStorage(applicationContext,Constants.adsIntervalInMinuteKey,Constants.adsIntervalInMinute)
-            Constants.appOpenAdsCode=SharedPreUtils.getStringFromStorage(applicationContext,Constants.appOpenAdsCodeKey,Constants.appOpenAdsCode)!!
-            Constants.lastAppOpenAdsShownTime=SharedPreUtils.getLongFromStorage(applicationContext, Constants.lastAppOpenAdsShownTimeKey, Constants.lastAppOpenAdsShownTime)
-
-            checkMandatoryUpdate()
-        }
     }
 
     private fun checkMandatoryUpdate() {
@@ -1062,6 +1016,75 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
+    }
+
+    private fun showUnitSettingsDialog() {
+        val dialogBinding: UnitSettingAlertDialogViewBinding = UnitSettingAlertDialogViewBinding.inflate(
+            LayoutInflater.from(this))
+        dialogBinding.dateFormatDropDownView.text=Constants.dateFormatUnit
+        dialogBinding.timeFormatDropDownView.text=Constants.timeFormatUnit
+        dialogBinding.temperatureDropDownView.text=Constants.temperatureUnit
+        dialogBinding.precipitationDropDownView.text=Constants.precipitationUnit
+        dialogBinding.windSpeedDropDownView.text=Constants.windSpeedUnit
+        dialogBinding.pressureDropDownView.text=Constants.pressureUnit
+        val temperatureList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.temperature_units_list))
+        val timeFormatList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.time_format_units_list))
+        val dateFormatList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.date_units_list))
+        val precipitationList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.precipitation_units_list))
+        val windSpeedList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.wind_speed_units_list))
+        val pressureList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.pressure_units_list))
+        dialogBinding.temperatureDropDownView.setOptions(temperatureList)
+        dialogBinding.timeFormatDropDownView.setOptions(timeFormatList)
+        dialogBinding.dateFormatDropDownView.setOptions(dateFormatList)
+        dialogBinding.precipitationDropDownView.setOptions(precipitationList)
+        dialogBinding.windSpeedDropDownView.setOptions(windSpeedList)
+        dialogBinding.pressureDropDownView.setOptions(pressureList)
+        dialogBinding.doneButton.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                Coroutines.io {
+                    SharedPreUtils.setBooleanToStorage(applicationContext,Constants.unitSettingKey,true)
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.temperatureUnitKey,dialogBinding.temperatureDropDownView.text.toString())
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.timeFormatUnitKey,dialogBinding.timeFormatDropDownView.text.toString())
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.dateFormatUnitKey,dialogBinding.dateFormatDropDownView.text.toString())
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.precipitationUnitKey,dialogBinding.precipitationDropDownView.text.toString())
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.windSpeedUnitKey,dialogBinding.windSpeedDropDownView.text.toString())
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.pressureUnitKey,dialogBinding.pressureDropDownView.text.toString())
+                    Constants.temperatureUnit=dialogBinding.temperatureDropDownView.text.toString()
+                    Constants.timeFormatUnit=dialogBinding.timeFormatDropDownView.text.toString()
+                    Constants.dateFormatUnit=dialogBinding.dateFormatDropDownView.text.toString()
+                    Constants.precipitationUnit=dialogBinding.precipitationDropDownView.text.toString()
+                    Constants.windSpeedUnit=dialogBinding.windSpeedDropDownView.text.toString()
+                    Constants.pressureUnit=dialogBinding.pressureDropDownView.text.toString()
+                }
+                unitSettingAlertDialog?.dismiss()
+                loadPreviousData()
+            }
+        })
+
+        val builder: AlertDialog.Builder= AlertDialog.Builder(this)
+            .setCancelable(false)
+            .setView(dialogBinding.root)
+        unitSettingAlertDialog =builder.create()
+        if (unitSettingAlertDialog?.window!=null) {
+            unitSettingAlertDialog?.window!!.attributes.windowAnimations=R.style.MyDialogTheme
+        }
+        if (!isFinishing) {
+            unitSettingAlertDialog?.show()
+        }
+    }
+
+    private fun shareAppLink() {
+        val shareIntent: Intent= Intent(Intent.ACTION_SEND)
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT,resources.getString(R.string.app_name))
+        shareIntent.putExtra(Intent.EXTRA_TEXT,"https://play.google.com/store/apps/details?id=${applicationContext.packageName}")
+        shareIntent.type = "text/plain"
+        startActivity(Intent.createChooser(shareIntent,resources.getString(R.string.choose_one)))
+    }
+
+    private fun feedbackMail() {
+        val feedbackIntent: Intent= Intent(Intent.ACTION_SENDTO,Uri.fromParts("mailto","md.abdullah563014@gmail.com",null))
+        feedbackIntent.putExtra(Intent.EXTRA_SUBJECT,resources.getString(R.string.feedback_title))
+        startActivity(Intent.createChooser(feedbackIntent,resources.getString(R.string.choose_one)))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -1154,6 +1177,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     DailyForecastActivity::class.java
                 )
             )
+            R.id.nav_unit_setting -> showUnitSettingsDialog()
+            R.id.nav_share -> shareAppLink()
+            R.id.nav_feedback -> feedbackMail()
             R.id.nav_privacy_policy -> startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
@@ -1166,66 +1192,61 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onBackPressed() {
-        if (binding.mainActivityDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.mainActivityDrawerLayout.closeDrawer(GravityCompat.START)
-        }
-        if (!searchView.isIconified) {
-            searchView.isIconified=true
-        } else{
-            super.onBackPressed()
+        appFeedbackDialog().monitor()
+        if (appFeedbackDialog().shouldShowRateDialog()) {
+            appFeedbackDialog().showRateDialogIfMeetsConditions()
+        } else {
+            if (binding.mainActivityDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                binding.mainActivityDrawerLayout.closeDrawer(GravityCompat.START)
+            }
+            if (!searchView.isIconified) {
+                searchView.isIconified=true
+            } else{
+                super.onBackPressed()
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
         checkMandatoryUpdate()
-        if (haveInternet()) {
-            checkLocationStatus()
-        } else{
+        if (!haveInternet()) {
             longToast(resources.getString(R.string.no_internet_message))
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (boundStatus && serviceConnection!=null) {
-            unbindService(serviceConnection!!)
-            boundStatus = false
-            serviceConnection=null
+    override fun onDestroy() {
+        try {
+            if (boundStatus && serviceConnection!=null) {
+                unbindService(serviceConnection!!)
+                boundStatus = false
+                serviceConnection=null
+            }
+        }catch (e: Exception) {
+
         }
+        super.onDestroy()
     }
 
     override fun onNegativeButtonClicked() {
+//        myLogEvent(Constants.appRatingBundleKey,"user press on negative button",Constants.userAppRatingEventKey)
         shortToast(resources.getString(R.string.thank_you))
-        onBackPressed()
+        super.onBackPressed()
     }
 
     override fun onNeutralButtonClicked() {
+//        myLogEvent(Constants.appRatingBundleKey,"user press on neutral button",Constants.userAppRatingEventKey)
         shortToast(resources.getString(R.string.thank_you))
-        onBackPressed()
+        super.onBackPressed()
     }
 
     override fun onPositiveButtonClicked(rate: Int) {
+//        myLogEvent(Constants.appRatingBundleKey,"user rate $rate star",Constants.userAppRatingEventKey)
         if (rate==5) {
-            val appPackageName = applicationContext.packageName
-            try {
-                startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("market://details?id=$appPackageName")
-                    )
-                )
-            } catch (e: ActivityNotFoundException) {
-                startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")
-                    )
-                )
-            }
+            CommonMethod.openAppLink(this)
         } else{
             shortToast(resources.getString(R.string.thank_you))
-            onBackPressed()
+            super.onBackPressed()
         }
     }
 

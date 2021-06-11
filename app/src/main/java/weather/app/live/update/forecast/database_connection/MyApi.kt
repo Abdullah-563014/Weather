@@ -5,6 +5,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import weather.app.live.update.forecast.BuildConfig
 import weather.app.live.update.forecast.models.CitySuggestionModel
@@ -20,6 +21,9 @@ interface MyApi {
 
     @GET("json")
     fun getIpInfo(): Call<JsonElement>
+
+    @GET("{country}/")
+    fun getWaqiInfo(@Path("country") countryName: String, @Query("token") token: String): Call<JsonElement>
 
 
 
@@ -45,6 +49,14 @@ interface MyApi {
             val baseUrl: String="http://ip-api.com/"
             return Retrofit.Builder()
                 .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(MyApi::class.java)
+        }
+
+        operator fun invoke(baseUrl: String,parameter: String, thirdParameter: String) : MyApi{
+            return Retrofit.Builder()
+                .baseUrl(BuildConfig.WAQI_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(MyApi::class.java)

@@ -17,7 +17,7 @@
     <string name="sunset">Sunset</string>
     <string name="hourly_forecast">Hourly Forecast</string>
     <string name="daily_forecast">Daily Forecast</string>
-    <string name="details_with_arrow">Details &#8594;</string>
+    <string name="details_with_arrow">Show Details &#8594;</string>
     <string name="other_details">Others Details</string>
     <string name="temp_details">Temperature Details</string>
     <string name="feels_like_details">Feels Like Details</string>
@@ -47,6 +47,7 @@
     <string name="pressure_unit">&#160; hPa</string>
     <string name="percent_icon">&#160; %</string>
     <string name="degree_celsius">&#160; \u2103</string>
+    <string name="degree_symbol">\u00B0</string>
 
     <string name="current_temp">Current Temperature:- &#160;</string>
     <string name="current_feels_like">Current Feels Like:- &#160;</string>
@@ -69,6 +70,72 @@
     <string name="ok">Ok</string>
     <string name="update_now">Update Now</string>
     <string name="version_name">Version:- </string>
+    <string name="unit_setting">Unit Setting</string>
+    <string name="c">C</string>
+    <string name="date_format">Date Format</string>
+    <string name="date_month_year">dd MMM yyyy</string>
+    <string name="time_format">Time Format</string>
+    <string name="twentyFourHours">24 Hour</string>
+    <string name="twelveHours">12 Hour</string>
+    <string name="precipitation">Precipitation</string>
+    <string name="mm">mm</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="kilo_meter_per_hour">km/h</string>
+    <string name="pressure">Pressure</string>
+    <string name="done">Done</string>
+    <string name="submit">Submit</string>
+    <string name="never">Never</string>
+    <string name="later">Later</string>
+    <string name="hourly_forecast_details">Hourly Forecast Details</string>
+    <string name="daily_forecast_details">Daily Forecast Details</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="feedback">Your Feedback</string>
+    <string name="share">Share</string>
+    <string name="choose_one">Choose one</string>
+    <string name="feedback_title">Recommendation from application user.</string>
+    <string name="weather_alert_message">Weather Alert Message</string>
+    <string name="message_with_clone">Message:-</string>
+    <string name="event_with_clone">Event:-</string>
+    <string name="event_start_with_clone">Start:-</string>
+    <string name="event_end_with_clone">End:-</string>
+    <string name="sender_with_clone">Sender:-</string>
+    <string name="rain_for_first_hour_with_clone">Rain for first hour:-</string>
+
+
+
+
+
+    <string-array name="date_units_list">
+        <item>dd MMM yyyy</item>
+        <item>MMM dd yyyy</item>
+        <item>yyyy MMM dd</item>
+    </string-array>
+    <string-array name="time_format_units_list">
+        <item>12 Hour</item>
+        <item>24 Hour</item>
+    </string-array>
+    <string-array name="temperature_units_list">
+        <item>C</item>
+        <item>F</item>
+        <item>K</item>
+    </string-array>
+    <string-array name="precipitation_units_list">
+        <item>mm</item>
+        <item>in</item>
+    </string-array>
+    <string-array name="wind_speed_units_list">
+        <item>km/h</item>
+        <item>mi/h</item>
+        <item>m/s</item>
+    </string-array>
+    <string-array name="pressure_units_list">
+        <item>mmHg</item>
+        <item>hPa</item>
+        <item>atm</item>
+        <item>mbar</item>
+    </string-array>
+
+
 
     <string name="privacy_policy_link">https://urappbazar5630.blogspot.com/p/weather-app-privacy-policy.html</string>
 

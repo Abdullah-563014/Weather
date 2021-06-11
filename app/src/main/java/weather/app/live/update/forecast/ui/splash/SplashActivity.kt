@@ -3,7 +3,9 @@ package weather.app.live.update.forecast.ui.splash
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -12,6 +14,7 @@ import com.google.android.gms.ads.appopen.AppOpenAd
 import weather.app.live.update.forecast.BuildConfig
 import weather.app.live.update.forecast.R
 import weather.app.live.update.forecast.databinding.ActivitySplashBinding
+import weather.app.live.update.forecast.databinding.UnitSettingAlertDialogViewBinding
 import weather.app.live.update.forecast.ui.main.MainActivity
 import weather.app.live.update.forecast.utils.CommonMethod
 import weather.app.live.update.forecast.utils.Constants
@@ -27,9 +30,8 @@ class SplashActivity : AppCompatActivity() {
     private lateinit var loadCallback: AppOpenAd.AppOpenAdLoadCallback
     private var isShowingAds=false
     private var loadTime: Long=0
-    private var isCountDownTimerEnd: Boolean=false
-    private var appOpenCounter: Long=1
-
+    private var unitSettingAlertDialog: AlertDialog?=null
+    private var unitSettingStatus: Boolean=false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +47,7 @@ class SplashActivity : AppCompatActivity() {
         startCountDownTimer()
 
         if (savedInstanceState==null) {
-            fetchAd()
+//            fetchAd()
         }
 
 
@@ -66,6 +68,13 @@ class SplashActivity : AppCompatActivity() {
             Constants.adsIntervalInMinute=SharedPreUtils.getIntFromStorage(applicationContext, Constants.adsIntervalInMinuteKey, Constants.adsIntervalInMinute)
             Constants.appOpenAdsCode=SharedPreUtils.getStringFromStorage(applicationContext, Constants.appOpenAdsCodeKey, Constants.appOpenAdsCode)!!
             Constants.lastAppOpenAdsShownTime=SharedPreUtils.getLongFromStorage(applicationContext, Constants.lastAppOpenAdsShownTimeKey, Constants.lastAppOpenAdsShownTime)
+            unitSettingStatus=SharedPreUtils.getBooleanFromStorage(applicationContext,Constants.unitSettingKey,false)
+            Constants.temperatureUnit=SharedPreUtils.getStringFromStorage(applicationContext,Constants.temperatureUnitKey,Constants.temperatureUnit)!!
+            Constants.timeFormatUnit=SharedPreUtils.getStringFromStorage(applicationContext,Constants.timeFormatUnitKey,Constants.timeFormatUnit)!!
+            Constants.dateFormatUnit=SharedPreUtils.getStringFromStorage(applicationContext,Constants.dateFormatUnitKey,Constants.dateFormatUnit)!!
+            Constants.precipitationUnit=SharedPreUtils.getStringFromStorage(applicationContext,Constants.precipitationUnitKey,Constants.precipitationUnit)!!
+            Constants.windSpeedUnit=SharedPreUtils.getStringFromStorage(applicationContext,Constants.windSpeedUnitKey,Constants.windSpeedUnit)!!
+            Constants.pressureUnit=SharedPreUtils.getStringFromStorage(applicationContext,Constants.pressureUnitKey,Constants.pressureUnit)!!
         }
     }
 
@@ -139,8 +148,61 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun gotoNextActivity() {
-        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-        finish()
+        if (unitSettingStatus) {
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            finish()
+        } else {
+            showUnitSettingsDialog()
+        }
+    }
+
+    private fun showUnitSettingsDialog() {
+        val dialogBinding: UnitSettingAlertDialogViewBinding = UnitSettingAlertDialogViewBinding.inflate(LayoutInflater.from(this))
+        val temperatureList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.temperature_units_list))
+        val timeFormatList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.time_format_units_list))
+        val dateFormatList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.date_units_list))
+        val precipitationList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.precipitation_units_list))
+        val windSpeedList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.wind_speed_units_list))
+        val pressureList: ArrayList<String> = arrayListOf(*resources.getStringArray(R.array.pressure_units_list))
+        dialogBinding.temperatureDropDownView.setOptions(temperatureList)
+        dialogBinding.timeFormatDropDownView.setOptions(timeFormatList)
+        dialogBinding.dateFormatDropDownView.setOptions(dateFormatList)
+        dialogBinding.precipitationDropDownView.setOptions(precipitationList)
+        dialogBinding.windSpeedDropDownView.setOptions(windSpeedList)
+        dialogBinding.pressureDropDownView.setOptions(pressureList)
+        dialogBinding.doneButton.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                Coroutines.io {
+                    SharedPreUtils.setBooleanToStorage(applicationContext,Constants.unitSettingKey,true)
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.temperatureUnitKey,dialogBinding.temperatureDropDownView.text.toString())
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.timeFormatUnitKey,dialogBinding.timeFormatDropDownView.text.toString())
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.dateFormatUnitKey,dialogBinding.dateFormatDropDownView.text.toString())
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.precipitationUnitKey,dialogBinding.precipitationDropDownView.text.toString())
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.windSpeedUnitKey,dialogBinding.windSpeedDropDownView.text.toString())
+                    SharedPreUtils.setStringToStorage(applicationContext,Constants.pressureUnitKey,dialogBinding.pressureDropDownView.text.toString())
+                    Constants.temperatureUnit=dialogBinding.temperatureDropDownView.text.toString()
+                    Constants.timeFormatUnit=dialogBinding.timeFormatDropDownView.text.toString()
+                    Constants.dateFormatUnit=dialogBinding.dateFormatDropDownView.text.toString()
+                    Constants.precipitationUnit=dialogBinding.precipitationDropDownView.text.toString()
+                    Constants.windSpeedUnit=dialogBinding.windSpeedDropDownView.text.toString()
+                    Constants.pressureUnit=dialogBinding.pressureDropDownView.text.toString()
+                }
+                unitSettingAlertDialog?.dismiss()
+                unitSettingStatus=true
+                gotoNextActivity()
+            }
+        })
+
+        val builder: AlertDialog.Builder= AlertDialog.Builder(this)
+            .setCancelable(false)
+            .setView(dialogBinding.root)
+        unitSettingAlertDialog =builder.create()
+        if (unitSettingAlertDialog?.window!=null) {
+            unitSettingAlertDialog?.window!!.attributes.windowAnimations=R.style.MyDialogTheme
+        }
+        if (!isFinishing) {
+            unitSettingAlertDialog?.show()
+        }
     }
 
     override fun onDestroy() {
