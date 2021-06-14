@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import weather.app.live.update.forecast.R
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -45,20 +46,85 @@ object CommonMethod {
     }
 
     fun getDistanceValue(originalValue: Double): String {
-        if (Constants.windSpeedUnit.equals("km/h",true)) {
-            return "${String.format("%.2f",(originalValue/1000)).toDouble()} kilo meter"
-        } else if (Constants.windSpeedUnit.equals("mi/h",true)) {
-            return "${String.format("%.2f",(originalValue/1609)).toDouble()} mile"
-        } else {
-            return "${String.format("%.2f",originalValue).toDouble()} meter"
+        try {
+            val refinedValue: String?= getRefiningStringForParsing(originalValue.toString())
+            if (refinedValue!=null) {
+                val refinedDoubleValue: Double=refinedValue.toDouble()
+                if (Constants.windSpeedUnit.equals("km/h",true)) {
+                    val value: String=String.format("%.2f",(refinedDoubleValue/1000))
+                    val convertedValue: String?= getRefiningStringForParsing(value)
+                    if (convertedValue!=null) {
+                        return "${convertedValue.toDouble()} kilo meter"
+                    } else {
+                        return "$value kilo meter"
+                    }
+                } else if (Constants.windSpeedUnit.equals("mi/h",true)) {
+                    val value: String=String.format("%.2f",(refinedDoubleValue/1609))
+                    val convertedValue: String?= getRefiningStringForParsing(value)
+                    if (convertedValue!=null) {
+                        return "${convertedValue.toDouble()} mile"
+                    } else {
+                        return "$value mile"
+                    }
+                } else {
+                    val value: String=String.format("%.2f",refinedDoubleValue)
+                    val convertedValue: String?= getRefiningStringForParsing(value)
+                    if (convertedValue!=null) {
+                        return "${convertedValue.toDouble()} meter"
+                    } else {
+                        return "$value meter"
+                    }
+                }
+            } else {
+                return "$originalValue meter"
+            }
+        } catch (e: Exception) {
+            return "$originalValue meter"
         }
     }
 
     fun getPrecipitationValue(originalValue: Double): String {
-        if (Constants.precipitationUnit.equals("in",true)) {
-            return "${String.format("%.2f",(originalValue/25.4)).toDouble()} in"
-        } else {
-            return "${String.format("%.2f",originalValue).toDouble()} mm"
+        try {
+            val refinedValue: String?= getRefiningStringForParsing(originalValue.toString())
+            if (refinedValue!=null) {
+                val refinedDoubleValue: Double=refinedValue.toDouble()
+                if (Constants.precipitationUnit.equals("in",true)) {
+                    val value: String=String.format("%.2f",(refinedDoubleValue/25.4))
+                    val convertedValue: String?= getRefiningStringForParsing(value)
+                    if (convertedValue!=null) {
+                        return "${convertedValue.toDouble()} in"
+                    } else {
+                        return "$value in"
+                    }
+                } else {
+                    val value: String=String.format("%.2f",refinedDoubleValue)
+                    val convertedValue: String?= getRefiningStringForParsing(value)
+                    if (convertedValue!=null) {
+                        return "${convertedValue.toDouble()} mm"
+                    } else {
+                        return "$value mm"
+                    }
+                }
+            } else {
+                return "$originalValue mm"
+            }
+        } catch (e: Exception) {
+            return "$originalValue mm"
+        }
+    }
+
+    fun getRefiningStringForParsing(originalValue: String): String? {
+        try {
+            var unitValue=originalValue
+            if (unitValue.contains(",")) {
+                unitValue=unitValue.replace(",","",true)
+            }
+            if (unitValue.contains(" ")) {
+                unitValue=unitValue.replace(" ","",true)
+            }
+            return unitValue
+        } catch (e: Exception) {
+            return null
         }
     }
 

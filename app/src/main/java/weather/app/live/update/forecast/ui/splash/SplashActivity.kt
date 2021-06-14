@@ -3,6 +3,7 @@ package weather.app.live.update.forecast.ui.splash
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -41,11 +42,7 @@ class SplashActivity : AppCompatActivity() {
 
         loadSettingFromStorage()
 
-        startCountDownTimer()
 
-        if (savedInstanceState==null) {
-            fetchAd()
-        }
 
 
 
@@ -72,6 +69,13 @@ class SplashActivity : AppCompatActivity() {
             Constants.precipitationUnit=SharedPreUtils.getStringFromStorage(applicationContext,Constants.precipitationUnitKey,Constants.precipitationUnit)!!
             Constants.windSpeedUnit=SharedPreUtils.getStringFromStorage(applicationContext,Constants.windSpeedUnitKey,Constants.windSpeedUnit)!!
             Constants.pressureUnit=SharedPreUtils.getStringFromStorage(applicationContext,Constants.pressureUnitKey,Constants.pressureUnit)!!
+
+            Coroutines.main {
+                startCountDownTimer()
+                if (Constants.adsFlag && CommonMethod.isRightToShowAdsAppOpenAds()) {
+                    fetchAd()
+                }
+            }
         }
     }
 

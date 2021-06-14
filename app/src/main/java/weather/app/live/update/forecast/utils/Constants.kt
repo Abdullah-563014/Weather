@@ -33,6 +33,10 @@ object Constants {
      var appOpenAdsCode: String="ca-app-pub-3940256099942544/3419835294"
 
 
+//     ==========================for onesignal=================================
+     val onesignalApplicationId: String="50c2e9e2-06d8-42d1-914f-217d5c5974c4"
+
+
 
 //     =============================== for analytics event ===============================
      val userAppRatingEventKey: String="user_app_rating"
